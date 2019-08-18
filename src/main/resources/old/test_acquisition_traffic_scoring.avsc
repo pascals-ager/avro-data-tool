@@ -1,0 +1,92 @@
+{
+  "type": "record",
+  "name": "test_acquisition_traffic_scoring",
+  "namespace": "io.pascals.avro.schema.model.acquisition",
+  "fields": [
+    {
+      "name": "type",
+      "type": "string"
+    },
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "happened",
+      "type": "string"
+    },
+    {
+      "name": "processed",
+      "type": "string"
+    },
+    {
+      "name": "tracking_id",
+      "type": "string"
+    },
+    {
+      "name": "referenced_event_id",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "source_attributes",
+      "type": {
+        "type": "record",
+        "name": "source_attributes",
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "origin",
+            "type": "string"
+          },
+          {
+            "name": "internal_data",
+            "type": [
+              "null",
+              {
+                "type": "map",
+                "values": [
+                  "null",
+                  "string"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "external_data",
+            "type": [
+              "null",
+              {
+                "type": "map",
+                "values": [
+                  "null",
+                  "string"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event_data_score",
+      "type": "int"
+    },
+    {
+      "name": "event_data_decision",
+      "type": "string"
+    },
+    {
+      "name": "event_data_reason",
+      "type": [
+        "null",
+        "string"
+      ]
+    }
+  ]
+}
