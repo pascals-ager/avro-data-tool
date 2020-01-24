@@ -11,7 +11,7 @@ package object metadata {
     *              hiveTable is the annotation
     *              tableName is the attribute name with value "Test"
     */
-  case class AnnotationAttribute( name: String, value: String )
+  case class AnnotationAttribute(name: String, value: String)
 
   trait HasValueAttribute {
     val attributes: Seq[AnnotationAttribute]
@@ -29,22 +29,23 @@ package object metadata {
     *                   hiveTable is the annotation name
     *                   Seq(AnnotationAttribute("tableName", "Test"), AnnotationAttribute("tableType", "External")) are the attributes
     */
-
-  case class AnnotationMeta( name: String, attributes: Seq[AnnotationAttribute] ) extends HasValueAttribute
+  case class AnnotationMeta(name: String, attributes: Seq[AnnotationAttribute])
+      extends HasValueAttribute
 
   trait HasAnnotations {
     val annotations: Iterable[AnnotationMeta]
 
-    def getAnnotationValue( annotationName: String ): Option[String] = {
+    def getAnnotationValue(annotationName: String): Option[String] = {
       annotations.find(_.name == annotationName).map(_.getValue)
     }
 
-    def annotationExists( annotationName: String ): Boolean = {
-      val annotation: Option[AnnotationMeta] = annotations.find(_.name == annotationName)
+    def annotationExists(annotationName: String): Boolean = {
+      val annotation: Option[AnnotationMeta] =
+        annotations.find(_.name == annotationName)
       annotation.isDefined
     }
 
-    def getAnnotationsByName( annotationName: String ): Iterable[AnnotationMeta] =
+    def getAnnotationsByName(annotationName: String): Iterable[AnnotationMeta] =
       annotations.filter(_.name == annotationName)
   }
 
@@ -54,10 +55,13 @@ package object metadata {
   }
 
   /*
-  * Define primitive types that the Metadata extractor understands.
-  *
-  * */
-  sealed abstract class PrimitiveTypeMeta( val packageName: String, val typeName: String ) extends TypeMeta
+   * Define primitive types that the Metadata extractor understands.
+   *
+   * */
+  sealed abstract class PrimitiveTypeMeta(
+      val packageName: String,
+      val typeName: String
+  ) extends TypeMeta
 
   case object NullType extends PrimitiveTypeMeta("scala", "NULL")
 
@@ -87,61 +91,59 @@ package object metadata {
 
   case object BigIntegerType extends PrimitiveTypeMeta("scala.math", "BigInt")
 
-  case class SeqTypeMeta( element: TypeMeta ) extends TypeMeta {
+  case class SeqTypeMeta(element: TypeMeta) extends TypeMeta {
     override val packageName: String = "scala"
-    override val typeName: String = "Seq"
+    override val typeName: String    = "Seq"
   }
 
-
-  case class MapTypeMeta( key: TypeMeta, value: TypeMeta ) extends TypeMeta {
+  case class MapTypeMeta(key: TypeMeta, value: TypeMeta) extends TypeMeta {
     override val packageName: String = "scala"
-    override val typeName: String = "Map"
+    override val typeName: String    = "Map"
   }
 
-/*
+  /*
   case class RecordTypeMeta(records: Iterable[TypeMeta]) extends TypeMeta {
     override val packageName: String = "hive"
     override val typeName: String = "Record"
   }
 
-  */
+   */
 
   case class ClassFieldMeta(
-                             /**
-                               * Original Scala class field name
-                               */
-                             originalFieldName: String,
-
-                             /**
-                               * Field name after applying annotations
-                               */
-                             fieldName: String,
-                             fieldType: TypeMeta,
-                             annotations: Iterable[AnnotationMeta] ) extends HasAnnotations
-
+      /**
+        * Original Scala class field name
+        */
+      originalFieldName: String,
+      /**
+        * Field name after applying annotations
+        */
+      fieldName: String,
+      fieldType: TypeMeta,
+      annotations: Iterable[AnnotationMeta]
+  ) extends HasAnnotations
 
   /*
-  * ClassTypeMeta puts together the primitive and complex types defined above along with annotations into an object
-  * that structures all the information that is required.
-  *
-  * */
+   * ClassTypeMeta puts together the primitive and complex types defined above along with annotations into an object
+   * that structures all the information that is required.
+   *
+   * */
 
   case class ClassTypeMeta(
-                            packageName: String,
+      packageName: String,
+      /**
+        * Name after applying annotations
+        *
+        * */
 
-                            /**
-                              * Name after applying annotations
-                              *
-                              * */
+      typeName: String,
+      /**
+        * Original Scala class name
+        * */
 
-                            typeName: String,
-
-                            /**
-                              * Original Scala class name
-                              * */
-
-                            originalTypeName: String,
-                            annotations: Iterable[AnnotationMeta],
-                            fields: Iterable[ClassFieldMeta] ) extends TypeMeta with HasAnnotations
+      originalTypeName: String,
+      annotations: Iterable[AnnotationMeta],
+      fields: Iterable[ClassFieldMeta]
+  ) extends TypeMeta
+      with HasAnnotations
 
 }

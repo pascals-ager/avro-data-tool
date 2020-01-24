@@ -32,31 +32,60 @@ object SqlServerDialect extends Dialect {
 
   override val reservedKeywords: Seq[String] = ???
 
-  override def applyAnnotation( c: metadata.ClassTypeMeta ): metadata.ClassTypeMeta = ???
+  override def applyAnnotation(
+      c: metadata.ClassTypeMeta
+  ): metadata.ClassTypeMeta = ???
 
-  override def getSpecificAnnotation( annotationName: String, hasAnnotations: metadata.HasAnnotations ): Option[metadata.AnnotationMeta] = ???
+  override def getSpecificAnnotation(
+      annotationName: String,
+      hasAnnotations: metadata.HasAnnotations
+  ): Option[metadata.AnnotationMeta] = ???
 
-  override def getAnnotatedClassName( c: metadata.ClassTypeMeta ): String = ???
+  override def getAnnotatedClassName(c: metadata.ClassTypeMeta): String = ???
 
-  override def getAnnotatedFieldName( cf: metadata.ClassFieldMeta, c: metadata.ClassTypeMeta ): String = ???
+  override def getAnnotatedFieldName(
+      cf: metadata.ClassFieldMeta,
+      c: metadata.ClassTypeMeta
+  ): String = ???
 
-  override def generateArrayTypeExpression( elementTypeExpression: String ): String = ???
+  override def generateArrayTypeExpression(
+      elementTypeExpression: String
+  ): String = ???
 
-  override def generateClassTypeExpression( classTypeMetaData: metadata.ClassTypeMeta, fieldNamesWithExpressions: Iterable[(String, String)] ): String = ???
+  override def generateClassTypeExpression(
+      classTypeMetaData: metadata.ClassTypeMeta,
+      fieldNamesWithExpressions: Iterable[(String, String)]
+  ): String = ???
 
-  override def generateClassFieldExpression( f: metadata.ClassFieldMeta ): String = ???
+  override def generateClassFieldExpression(
+      f: metadata.ClassFieldMeta
+  ): String = ???
 
-  override def generateMapTypeExpression( keyExpression: String, valueExpression: String ): String = ???
+  override def generateMapTypeExpression(
+      keyExpression: String,
+      valueExpression: String
+  ): String = ???
 
-  override def generateTypeExpression( typeMetaData: metadata.TypeMeta ): String = ???
+  override def generateTypeExpression(typeMetaData: metadata.TypeMeta): String =
+    ???
 
-  override def generateFieldName( columnName: String ): String = ???
+  override def generateFieldName(columnName: String): String = ???
 
-  override def alterDataModel( classTypeMeta: metadata.ClassTypeMeta, fieldsExpressions: Iterable[String] ): String = ???
+  override def alterDataModel(
+      classTypeMeta: metadata.ClassTypeMeta,
+      fieldsExpressions: Iterable[String]
+  ): String = ???
 
-  override def generateDataModel( classTypeMeta: metadata.ClassTypeMeta, fieldsExpressions: Iterable[String] ): String = ???
+  override def generateDataModel(
+      classTypeMeta: metadata.ClassTypeMeta,
+      fieldsExpressions: Iterable[String]
+  ): String = ???
 
-  override def alterTableExpression( classTypeMetaData: metadata.ClassTypeMeta ): String = ???
+  override def alterTableExpression(
+      classTypeMetaData: metadata.ClassTypeMeta
+  ): String = ???
 
-  override def createTableExpression( classTypeMetaData: metadata.ClassTypeMeta ): String = ???
+  override def createTableExpression(
+      classTypeMetaData: metadata.ClassTypeMeta
+  ): String = ???
 }

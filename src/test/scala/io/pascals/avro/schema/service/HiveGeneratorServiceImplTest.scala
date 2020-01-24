@@ -2,34 +2,37 @@ package io.pascals.avro.schema.service
 
 import io.pascals.avro.schema.annotations.hive._
 import io.pascals.avro.schema.metadata._
-import io.pascals.avro.schema.service.HiveGeneratorServiceImpl.{generateAlterDDL, generateCreateDDL}
+import io.pascals.avro.schema.service.HiveGeneratorServiceImpl.{
+  generateAlterDDL,
+  generateCreateDDL
+}
 import org.scalatest.{FunSuite, Matchers}
 
 import scala.collection.mutable.ArrayBuffer
 
-
 class HiveGeneratorServiceImplTest extends FunSuite with Matchers {
 
   @hiveTable(name = "Person")
-  case class Person( @column(name = "name")
-                     personName: String,
-                     @column(name = "age")
-                     personAge: Int,
-                     @column(name = "relationship")
-                     personRelationships: Map[String, String],
-                     @hiveBucket(buckets = 6)
-                     @column(name = "tracking_id")
-                     personReference: String,
-                     @hiveBucket(buckets = 4)
-                     @column(name = "position")
-                     personRole: String,
-                     @hivePartitionColumn
-                     year: Int,
-                     @hivePartitionColumn
-                     month: Int,
-                     @hivePartitionColumn
-                     day: Int )
-
+  case class Person(
+      @column(name = "name")
+      personName: String,
+      @column(name = "age")
+      personAge: Int,
+      @column(name = "relationship")
+      personRelationships: Map[String, String],
+      @hiveBucket(buckets = 6)
+      @column(name = "tracking_id")
+      personReference: String,
+      @hiveBucket(buckets = 4)
+      @column(name = "position")
+      personRole: String,
+      @hivePartitionColumn
+      year: Int,
+      @hivePartitionColumn
+      month: Int,
+      @hivePartitionColumn
+      day: Int
+  )
 
   val personDDL: String =
     """CREATE TABLE IF NOT EXISTS Person(
@@ -51,14 +54,15 @@ class HiveGeneratorServiceImplTest extends FunSuite with Matchers {
   }
 
   case class SimplePerson(
-                     personName: String,
-                     personAge: Int,
-                     personRelationships: Map[String, String],
-                     personReference: String,
-                     personRole: String,
-                     year: Int,
-                     month: Int,
-                     day: Int )
+      personName: String,
+      personAge: Int,
+      personRelationships: Map[String, String],
+      personReference: String,
+      personRole: String,
+      year: Int,
+      month: Int,
+      day: Int
+  )
 
   val simplePersonDDL: String =
     """CREATE TABLE IF NOT EXISTS SimplePerson(
@@ -79,15 +83,19 @@ class HiveGeneratorServiceImplTest extends FunSuite with Matchers {
 
   }
 
-
   case class ReferencedPerson(
-                           personName: Option[String],
-                           personAge: Option[Int],
-                           personRelationships: Option[List[Option[Relationship]]],
-                           personReference: Option[String],
-                           personRole: Option[String])
+      personName: Option[String],
+      personAge: Option[Int],
+      personRelationships: Option[List[Option[Relationship]]],
+      personReference: Option[String],
+      personRole: Option[String]
+  )
 
-  case class Relationship(fromPerson: String, toPerson: String, relationshipType: Option[String])
+  case class Relationship(
+      fromPerson: String,
+      toPerson: String,
+      relationshipType: Option[String]
+  )
 
   val referencedPersonDDL: String =
     """CREATE TABLE IF NOT EXISTS ReferencedPerson(
@@ -105,14 +113,61 @@ class HiveGeneratorServiceImplTest extends FunSuite with Matchers {
 
   }
 
+  case class test_click(
+      year: Int,
+      month: Int,
+      day: Int,
+      `type`: String,
+      id: String,
+      happened: String,
+      processed: String,
+      tracking_id: String,
+      source_attributes: source_attributes,
+      event_data_remote_address: Option[String],
+      event_data_query_parameters: Option[Map[String, Seq[String]]],
+      event_data_headers: Option[Map[String, Option[String]]],
+      event_data_device: Option[event_data_device],
+      event_data_geolocation: Option[event_data_geolocation],
+      event_data_isp: Option[event_data_isp]
+  )
+  case class event_data_device(
+      device_manufacturer: Option[String],
+      device_name: Option[String],
+      form_factor: Option[String],
+      os: Option[String],
+      os_version: Option[String],
+      is_tablet: Option[Boolean],
+      is_wireless_device: Option[Boolean],
+      mobile_browser: Option[String],
+      mobile_browser_version: Option[String]
+  )
+  case class event_data_geolocation(
+      latitude: Option[String],
+      longitude: Option[String],
+      precision_radius: Option[Int],
+      continent: Option[String],
+      country_code: Option[String],
+      region: Option[String],
+      city: Option[String],
+      city_localized: Option[String],
+      zipcode: Option[String],
+      timezone: Option[String]
+  )
+  case class event_data_isp(
+      network: Option[String],
+      name: Option[String],
+      organization: Option[String],
+      autonomous_system_number: Option[String]
+  )
+  case class source_attributes(
+      id: String,
+      origin: String,
+      internal_data: Option[Map[String, Option[Int]]],
+      external_data: Option[Map[String, Option[String]]]
+  )
 
-  case class test_click(year: Int, month: Int, day: Int, `type`: String, id: String, happened: String, processed: String, tracking_id: String, source_attributes: source_attributes, event_data_remote_address: Option[String], event_data_query_parameters: Option[Map[String, Seq[String]]], event_data_headers: Option[Map[String, Option[String]]], event_data_device: Option[event_data_device], event_data_geolocation: Option[event_data_geolocation], event_data_isp: Option[event_data_isp])
-  case class event_data_device(device_manufacturer: Option[String], device_name: Option[String], form_factor: Option[String], os: Option[String], os_version: Option[String], is_tablet: Option[Boolean], is_wireless_device: Option[Boolean], mobile_browser: Option[String], mobile_browser_version: Option[String])
-  case class event_data_geolocation(latitude: Option[String], longitude: Option[String], precision_radius: Option[Int], continent: Option[String], country_code: Option[String], region: Option[String], city: Option[String], city_localized: Option[String], zipcode: Option[String], timezone: Option[String])
-  case class event_data_isp(network: Option[String], name: Option[String], organization: Option[String], autonomous_system_number: Option[String])
-  case class source_attributes(id: String, origin: String, internal_data: Option[Map[String, Option[Int]]], external_data: Option[Map[String, Option[String]]])
-
-  val testClickDDL: String = """CREATE TABLE IF NOT EXISTS test_click(
+  val testClickDDL: String =
+    """CREATE TABLE IF NOT EXISTS test_click(
                             |   year INT,
                             |   month INT,
                             |   day INT,
@@ -135,8 +190,8 @@ class HiveGeneratorServiceImplTest extends FunSuite with Matchers {
     testClick should equal(testClickDDL)
   }
 
-  @hiveStoredAs(format="ORC")
-  @hiveTable(name="TestOrc")
+  @hiveStoredAs(format = "ORC")
+  @hiveTable(name = "TestOrc")
   case class Test(name: String, detail: Int)
 
   val storedAsDDL: String = """CREATE TABLE IF NOT EXISTS TestOrc(
@@ -158,7 +213,7 @@ class HiveGeneratorServiceImplTest extends FunSuite with Matchers {
   @hiveTableProperty("orc.encoding.strategy", "SPEED")
   @hiveTableProperty("transactional", "true")
   @hiveTableProperty("avro.schema.url", "hdfs:///metadata/table.avro")
-  @hiveTable(name="TestProperty")
+  @hiveTable(name = "TestProperty")
   case class PropertyTest(name: String, detail: Int)
 
   val propertyDDL: String = """CREATE TABLE IF NOT EXISTS TestProperty(
@@ -186,26 +241,29 @@ class HiveGeneratorServiceImplTest extends FunSuite with Matchers {
   @hiveTableProperty("orc.create.index", "true")
   @hiveTableProperty("orc.encoding.strategy", "SPEED")
   @hiveTableProperty("transactional", "true")
-  @hiveStoredAs(format="ORC")
-  @hiveTable(name="test_events_acquisition_click")
-  case class acquisition_click_test(@hivePartitionColumn year: Int,
-                                    @hivePartitionColumn month: Int,
-                                    @hivePartitionColumn day: Int,
-                                    `type`: String,
-                                    id: String,
-                                    happened: String,
-                                    processed: String,
-                                    @hiveBucket(buckets = 6)
-                                    tracking_id: String,
-                                    source_attributes: source_attributes,
-                                    event_data_remote_address: Option[String],
-                                    event_data_query_parameters: Option[Map[String, Seq[String]]],
-                                    event_data_headers: Option[Map[String, Option[String]]],
-                                    event_data_device: Option[event_data_device],
-                                    event_data_geolocation: Option[event_data_geolocation],
-                                    event_data_isp: Option[event_data_isp])
+  @hiveStoredAs(format = "ORC")
+  @hiveTable(name = "test_events_acquisition_click")
+  case class acquisition_click_test(
+      @hivePartitionColumn year: Int,
+      @hivePartitionColumn month: Int,
+      @hivePartitionColumn day: Int,
+      `type`: String,
+      id: String,
+      happened: String,
+      processed: String,
+      @hiveBucket(buckets = 6)
+      tracking_id: String,
+      source_attributes: source_attributes,
+      event_data_remote_address: Option[String],
+      event_data_query_parameters: Option[Map[String, Seq[String]]],
+      event_data_headers: Option[Map[String, Option[String]]],
+      event_data_device: Option[event_data_device],
+      event_data_geolocation: Option[event_data_geolocation],
+      event_data_isp: Option[event_data_isp]
+  )
 
-  val acquisitionClicksTestDDL: String = """CREATE TABLE IF NOT EXISTS test_events_acquisition_click(
+  val acquisitionClicksTestDDL: String =
+    """CREATE TABLE IF NOT EXISTS test_events_acquisition_click(
                                 |   type STRING,
                                 |   id STRING,
                                 |   happened STRING,
@@ -232,15 +290,66 @@ class HiveGeneratorServiceImplTest extends FunSuite with Matchers {
                                 |)""".stripMargin
 
   test("Generate Clicks Table With Annotations Test") {
-    val acquisitionClicksTest: Option[String] = generateCreateDDL[acquisition_click_test]()
+    val acquisitionClicksTest: Option[String] =
+      generateCreateDDL[acquisition_click_test]()
     acquisitionClicksTest match {
       case Some(createStmt) => createStmt shouldEqual acquisitionClicksTestDDL
-      case None => fail("Create Table statement not generated. Failing test!")
+      case None             => fail("Create Table statement not generated. Failing test!")
     }
   }
 
-  val diffClassTypeMeta = ClassTypeMeta("test_events_acquisition_traffic_scoring", "test_events_acquisition_traffic_scoring", "test_events_acquisition_traffic_scoring", List(), List(ClassFieldMeta("event_data_new_decision","event_data_new_decision",StringType,List()), ClassFieldMeta("event_data_new_score","event_data_new_score",IntegerType,List()), ClassFieldMeta("event_data_new_strategies","event_data_new_strategies",SeqTypeMeta(ClassTypeMeta("union","union","union",List(),ArrayBuffer(ClassFieldMeta("strategy","strategy",StringType,List()), ClassFieldMeta("score","score",IntegerType,List()), ClassFieldMeta("decision","decision",StringType,List())))),List()), ClassFieldMeta("event_data_new_map_column","event_data_new_map_column",MapTypeMeta(StringType,StringType),List()), ClassFieldMeta("event_data_new_array","event_data_new_array",SeqTypeMeta(IntegerType),List())))
-  val alterTrafficScoringDDL: String = """ALTER TABLE test_events_acquisition_traffic_scoring ADD COLUMNS(
+  val diffClassTypeMeta = ClassTypeMeta(
+    "test_events_acquisition_traffic_scoring",
+    "test_events_acquisition_traffic_scoring",
+    "test_events_acquisition_traffic_scoring",
+    List(),
+    List(
+      ClassFieldMeta(
+        "event_data_new_decision",
+        "event_data_new_decision",
+        StringType,
+        List()
+      ),
+      ClassFieldMeta(
+        "event_data_new_score",
+        "event_data_new_score",
+        IntegerType,
+        List()
+      ),
+      ClassFieldMeta(
+        "event_data_new_strategies",
+        "event_data_new_strategies",
+        SeqTypeMeta(
+          ClassTypeMeta(
+            "union",
+            "union",
+            "union",
+            List(),
+            ArrayBuffer(
+              ClassFieldMeta("strategy", "strategy", StringType, List()),
+              ClassFieldMeta("score", "score", IntegerType, List()),
+              ClassFieldMeta("decision", "decision", StringType, List())
+            )
+          )
+        ),
+        List()
+      ),
+      ClassFieldMeta(
+        "event_data_new_map_column",
+        "event_data_new_map_column",
+        MapTypeMeta(StringType, StringType),
+        List()
+      ),
+      ClassFieldMeta(
+        "event_data_new_array",
+        "event_data_new_array",
+        SeqTypeMeta(IntegerType),
+        List()
+      )
+    )
+  )
+  val alterTrafficScoringDDL: String =
+    """ALTER TABLE test_events_acquisition_traffic_scoring ADD COLUMNS(
                                          |   event_data_new_decision STRING,
                                          |   event_data_new_score INT,
                                          |   event_data_new_strategies ARRAY<STRUCT<strategy : STRING, score : INT, decision : STRING>>,
@@ -248,11 +357,11 @@ class HiveGeneratorServiceImplTest extends FunSuite with Matchers {
                                          |   event_data_new_array ARRAY<INT>
                                          |)""".stripMargin
 
-  test("Generate ALTER Table statement Test"){
+  test("Generate ALTER Table statement Test") {
     val alterDDL: Option[String] = generateAlterDDL(diffClassTypeMeta)
     alterDDL match {
       case Some(alterStmt) => alterStmt shouldEqual alterTrafficScoringDDL
-      case None => fail("Alter Table statement not generated. Failing test!")
+      case None            => fail("Alter Table statement not generated. Failing test!")
     }
   }
 

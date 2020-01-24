@@ -38,6 +38,7 @@ lazy val root = (project in file(".")).
     )
   )
 
+scalafmtOnCompile := true
 publishMavenStyle := true
 publishArtifact in Test := false
 publishTo := {
