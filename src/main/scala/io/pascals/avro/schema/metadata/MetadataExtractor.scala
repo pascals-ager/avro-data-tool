@@ -66,29 +66,27 @@ object MetadataExtractor {
 
   private def extractAnnotations(symbol: ru.Symbol): Seq[AnnotationMeta] = {
     symbol.annotations
-      .map(
-        a =>
-          AnnotationMeta(
-            name = a.tree.tpe.toString,
-            attributes = {
-              val params = a.tree.tpe.decls
-                .find(_.name.toString == "<init>")
-                .get
-                .asMethod
-                .paramLists
-                .flatten
-                .map(f => f.name.toString)
-              val values = a.tree.children.tail
-              (params zip values)
-                .map(
-                  pv =>
-                    AnnotationAttribute(
-                      name = pv._1,
-                      value = pv._2.toString.stripPrefix("\"").stripSuffix("\"")
-                    )
+      .map(a =>
+        AnnotationMeta(
+          name = a.tree.tpe.toString,
+          attributes = {
+            val params = a.tree.tpe.decls
+              .find(_.name.toString == "<init>")
+              .get
+              .asMethod
+              .paramLists
+              .flatten
+              .map(f => f.name.toString)
+            val values = a.tree.children.tail
+            (params zip values)
+              .map(pv =>
+                AnnotationAttribute(
+                  name = pv._1,
+                  value = pv._2.toString.stripPrefix("\"").stripSuffix("\"")
                 )
-            }
-          )
+              )
+          }
+        )
       )
   }
 

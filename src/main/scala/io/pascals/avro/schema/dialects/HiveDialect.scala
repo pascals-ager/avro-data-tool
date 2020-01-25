@@ -201,8 +201,8 @@ object HiveDialect extends Dialect {
     case c: ClassTypeMeta =>
       generateClassTypeExpression(
         c,
-        c.fields.map(
-          f => (f.fieldName, generateClassFieldExpression(f, level + 1))
+        c.fields.map(f =>
+          (f.fieldName, generateClassFieldExpression(f, level + 1))
         )
       )
   }
