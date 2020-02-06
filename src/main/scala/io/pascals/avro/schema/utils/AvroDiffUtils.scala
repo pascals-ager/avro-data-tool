@@ -15,7 +15,7 @@ object AvroDiffUtils {
    * */
   private val log = Logger(getClass)
 
-  private def getNonNullSchema(schema: Schema): Schema = {
+  def getNonNullSchema(schema: Schema): Schema = {
     schema.getType match {
       case Schema.Type.UNION => {
         val list_types = schema.getTypes

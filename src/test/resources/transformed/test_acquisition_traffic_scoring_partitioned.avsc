@@ -1,0 +1,174 @@
+{
+    "type": "record",
+    "name": "test_acquisition_traffic_scoring",
+    "namespace": "io.pascals.avro.schema.model.acquisition",
+    "fields": [
+      {
+        "name": "type",
+        "type": [
+          "null",
+          "string"
+        ],
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": [
+          "null",
+          "string"
+        ],
+        "default": null
+      },
+      {
+        "name": "happened",
+        "type": [
+          "null",
+          "string"
+        ],
+        "default": null
+      },
+      {
+        "name": "processed",
+        "type": [
+          "null",
+          "string"
+        ],
+        "default": null
+      },
+      {
+        "name": "tracking_id",
+        "type": [
+          "null",
+          "string"
+        ],
+        "default": null
+      },
+      {
+        "name": "referenced_event_id",
+        "type": [
+          "null",
+          "string"
+        ],
+        "default": null
+      },
+      {
+        "name": "source_attributes",
+        "type": [
+          "null",
+          {
+            "type": "record",
+            "name": "source_attributes",
+            "fields": [
+              {
+                "name": "id",
+                "type": "string"
+              },
+              {
+                "name": "origin",
+                "type": "string"
+              },
+              {
+                "name": "internal_data",
+                "type": [
+                  "null",
+                  {
+                    "type": "map",
+                    "values": [
+                      "null",
+                      "string"
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "external_data",
+                "type": [
+                  "null",
+                  {
+                    "type": "map",
+                    "values": [
+                      "null",
+                      "string"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "event_data",
+        "type": [
+          "null",
+          {
+            "type": "record",
+            "name": "event_data",
+            "fields": [
+              {
+                "name": "score",
+                "type": "int"
+              },
+              {
+                "name": "decision",
+                "type": "string"
+              },
+              {
+                "name": "reason",
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              {
+                "name": "nested_event_data",
+                "type": [
+                  "null",
+                  {
+                    "type": "record",
+                    "name": "nested_event_data",
+                    "fields": [
+                      {
+                        "name": "nested_score",
+                        "type": "int"
+                      },
+                      {
+                        "name": "nested_decision",
+                        "type": "string"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "default": null
+      },
+      {
+        "name": "year",
+        "type": [
+          "null",
+          "int"
+        ],
+        "default": null
+      },
+      {
+        "name": "month",
+        "type": [
+          "null",
+          "int"
+        ],
+        "default": null
+      },
+      {
+        "name": "day",
+        "type": [
+          "null",
+          "int"
+        ],
+        "default": null
+      }
+    ]
+  }

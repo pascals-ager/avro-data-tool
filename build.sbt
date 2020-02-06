@@ -9,10 +9,10 @@ lazy val Vers = new {
 lazy val commonSettings = Seq(
 
   name := "avro-data-tool",
-  scalaVersion := "2.12.8",
+  scalaVersion := "2.12.10",
   organization := "io.pascals.avro.schema",
-  scalaVersion := "2.12.8",
-  crossScalaVersions := Seq("2.11.11", "2.12.8"),
+  scalaVersion := "2.12.10",
+  crossScalaVersions := Seq("2.11.11", "2.12.10"),
   scalacOptions ++= Seq("-target:jvm-1.8", "-Ypartial-unification"),
   addCompilerPlugin("org.scalamacros" %% "paradise" % "2.1.0" cross CrossVersion.full),
   sourceGenerators in Compile += (avroScalaGenerate in Compile).taskValue,

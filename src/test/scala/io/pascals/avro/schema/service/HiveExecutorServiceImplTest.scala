@@ -156,20 +156,4 @@ class HiveExecutorServiceImplTest extends FunSuite with Matchers {
       connection <- hiveExecutorService(createDDL)
     } yield connection.transact(xa).unsafeRunSync() shouldEqual 0
   }
-
-  /*
-  case class TestReferencedPerson(
-                               personName: Option[String],
-                               personAge: Option[Int],
-                               personRelationships: Option[List[Option[Relationship]]],
-                               personReference: Option[String],
-                               personRole: Option[String])
-
-  test("Create ReferencedPerson with test executor service Test", IntegrationTest){
-    for {
-      createDDL <- generateCreateDDL[TestReferencedPerson]()
-      connection <- Option(hiveTestExecutorService(createDDL))
-    } yield connection.transact(xa).unsafeRunSync shouldEqual Some(0)
-  }
- */
 }
