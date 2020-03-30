@@ -72,14 +72,22 @@ trait Dialect {
 
   def getAnnotatedFieldName(cf: ClassFieldMeta, c: ClassTypeMeta): String
 
-  def generateArrayTypeExpression(elementTypeExpression: String): String
-
   def generateClassTypeExpression(
       classTypeMetaData: ClassTypeMeta,
-      fieldNamesWithExpressions: Iterable[(String, String)]
+      fieldNamesWithExpressions: Seq[(String, String)]
   ): String
 
   def generateClassFieldExpression(f: ClassFieldMeta): String
+
+  def generateColumnsExpression(
+      classTypeMetaData: ClassTypeMeta,
+      fieldsExpressions: Seq[String]
+  ): String
+
+  def generatePrimitiveTypeExpression(p: PrimitiveTypeMeta): String =
+    mapPrimitiveDataType(p)
+
+  def generateArrayTypeExpression(elementTypeExpression: String): String
 
   def generateMapTypeExpression(
       keyExpression: String,
@@ -88,25 +96,16 @@ trait Dialect {
 
   def generateTypeExpression(typeMetaData: TypeMeta): String
 
-  def generateColumnsExpression(
-      classTypeMetaData: ClassTypeMeta,
-      fieldsExpressions: Iterable[String]
-  ): String =
-    "(\n   " + fieldsExpressions.mkString(",\n   ") + "\n)"
-
-  def generatePrimitiveTypeExpression(p: PrimitiveTypeMeta): String =
-    mapPrimitiveDataType(p)
-
   def generateFieldName(columnName: String): String
 
   def alterDataModel(
       classTypeMeta: ClassTypeMeta,
-      fieldsExpressions: Iterable[String]
+      fieldsExpressions: Seq[String]
   ): String
 
   def generateDataModel(
       classTypeMeta: ClassTypeMeta,
-      fieldsExpressions: Iterable[String],
+      fieldsExpressions: Seq[String],
       default: Boolean = false
   ): String
 

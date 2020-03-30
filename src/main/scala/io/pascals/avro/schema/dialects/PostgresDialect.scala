@@ -1,4 +1,5 @@
 package io.pascals.avro.schema.dialects
+
 import io.pascals.avro.schema.metadata
 
 object PostgresDialect extends Dialect {
@@ -48,17 +49,25 @@ object PostgresDialect extends Dialect {
       c: metadata.ClassTypeMeta
   ): String = ???
 
-  override def generateArrayTypeExpression(
-      elementTypeExpression: String
-  ): String = ???
-
   override def generateClassTypeExpression(
       classTypeMetaData: metadata.ClassTypeMeta,
-      fieldNamesWithExpressions: Iterable[(String, String)]
+      fieldNamesWithExpressions: Seq[(String, String)]
   ): String = ???
 
   override def generateClassFieldExpression(
       f: metadata.ClassFieldMeta
+  ): String = ???
+
+  override def generateColumnsExpression(
+      classTypeMetaData: metadata.ClassTypeMeta,
+      fieldsExpressions: Seq[String]
+  ): String = ???
+
+  override def generateTypeExpression(typeMetaData: metadata.TypeMeta): String =
+    ???
+
+  override def generateArrayTypeExpression(
+      elementTypeExpression: String
   ): String = ???
 
   override def generateMapTypeExpression(
@@ -66,14 +75,11 @@ object PostgresDialect extends Dialect {
       valueExpression: String
   ): String = ???
 
-  override def generateTypeExpression(typeMetaData: metadata.TypeMeta): String =
-    ???
-
   override def generateFieldName(columnName: String): String = ???
 
   override def alterDataModel(
       classTypeMeta: metadata.ClassTypeMeta,
-      fieldsExpressions: Iterable[String]
+      fieldsExpressions: Seq[String]
   ): String = ???
 
   override def alterTableExpression(
@@ -86,7 +92,8 @@ object PostgresDialect extends Dialect {
 
   override def generateDataModel(
       classTypeMeta: metadata.ClassTypeMeta,
-      fieldsExpressions: Iterable[String],
+      fieldsExpressions: Seq[String],
       default: Boolean
   ): String = ???
+
 }

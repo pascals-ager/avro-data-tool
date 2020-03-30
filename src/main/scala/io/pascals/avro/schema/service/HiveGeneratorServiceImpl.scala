@@ -62,11 +62,11 @@ object HiveGeneratorServiceImpl extends ModelGeneratorService {
     HiveDialect.generateDataModel(c, generateFieldsExpressions(c), default)
   }
 
-  private def generateFieldsExpressions(c: ClassTypeMeta): Iterable[String] = {
+  private def generateFieldsExpressions(c: ClassTypeMeta): Seq[String] = {
     c.fields
       .withFilter(f => HiveDialect.generateColumn(f))
       .map(f => HiveDialect.generateClassFieldExpression(f))
-  }
+  }.toSeq
 
   private def getClassMeta[T: ClassTag: TypeTag]: ClassTypeMeta =
     MetadataExtractor.extractClassMeta[T]()

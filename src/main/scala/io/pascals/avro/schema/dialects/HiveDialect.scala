@@ -1,8 +1,6 @@
 package io.pascals.avro.schema.dialects
 
-import io.pascals.avro.schema.metadata.{ClassFieldMeta, _}
-import it.unimi.dsi.fastutil.ints.IntCollections.IterableCollection
-
+import io.pascals.avro.schema.metadata._
 import scala.util.Try
 
 object HiveDialect extends Dialect {
@@ -205,24 +203,19 @@ object HiveDialect extends Dialect {
    * With the mappings defined and annotations applied, we implement generators which know what to do with a ClassTypeMeta.
    * */
 
-  override def generateArrayTypeExpression(
-      elementTypeExpression: String
-  ): String =
-    s"ARRAY<$elementTypeExpression>"
-
-  def generateClassTypeExpression(
+  override def generateClassTypeExpression(
       classTypeMetaData: ClassTypeMeta,
-      fieldNamesWithExpressions: Iterable[(String, String)]
+      fieldNamesWithExpressions: Seq[(String, String)]
   ): String =
     s"STRUCT<${classTypeMetaData.fields
       .map(f => s"${f.fieldName} : ${generateTypeExpression(f.fieldType)}")
       .mkString(", ")}>"
 
-  override def generateMapTypeExpression(
-      keyExpression: String,
-      valueExpression: String
+  override def generateColumnsExpression(
+      classTypeMetaData: ClassTypeMeta,
+      fieldsExpressions: Seq[String]
   ): String =
-    s"MAP<$keyExpression, $valueExpression>"
+    "(\n   " + fieldsExpressions.mkString(",\n   ") + "\n)"
 
   override def generateTypeExpression(typeMetaData: TypeMeta): String =
     generateTypeExpression(typeMetaData, 0)
@@ -242,22 +235,33 @@ object HiveDialect extends Dialect {
     case c: ClassTypeMeta =>
       generateClassTypeExpression(
         c,
-        c.fields.map(f =>
-          (f.fieldName, generateClassFieldExpression(f, level + 1))
-        )
+        c.fields
+          .map(f => (f.fieldName, generateClassFieldExpression(f, level + 1)))
+          .toSeq
       )
   }
 
+  override def generateMapTypeExpression(
+      keyExpression: String,
+      valueExpression: String
+  ): String =
+    s"MAP<$keyExpression, $valueExpression>"
+
+  override def generateArrayTypeExpression(
+      elementTypeExpression: String
+  ): String =
+    s"ARRAY<$elementTypeExpression>"
+
   override def alterDataModel(
       classTypeMeta: ClassTypeMeta,
-      fieldsExpressions: Iterable[String]
+      fieldsExpressions: Seq[String]
   ): String =
     alterTableExpression(classTypeMeta) +
       generateColumnsExpression(classTypeMeta, fieldsExpressions)
 
   override def generateDataModel(
       classTypeMeta: ClassTypeMeta,
-      fieldsExpressions: Iterable[String],
+      fieldsExpressions: Seq[String],
       default: Boolean = false
   ): String =
     createTableExpression(classTypeMeta) +
@@ -391,8 +395,8 @@ object HiveDialect extends Dialect {
       c: ClassTypeMeta,
       default: Boolean = false
   ): Seq[(ClassFieldMeta, Int)] = {
-    val bucketedFeilds: Iterable[ClassFieldMeta] =
-      c.fields.filter(_.annotations.exists(_.name == HiveBucketColumn))
+    val bucketedFeilds: Seq[ClassFieldMeta] =
+      c.fields.filter(_.annotations.exists(_.name == HiveBucketColumn)).toSeq
     bucketedFeilds
       .map(f => {
         val bucketColumn: AnnotationMeta =
@@ -473,7 +477,7 @@ object HiveDialect extends Dialect {
       c: ClassTypeMeta,
       default: Boolean = false
   ): String = {
-    val tblProps: Iterable[(String, String)] = getTblProperties(c)
+    val tblProps: Seq[(String, String)] = getTblProperties(c)
     if (tblProps.isEmpty && !default) ""
     else if (tblProps.isEmpty && default) {
       "\nTBLPROPERTIES(\n  " +
@@ -488,5 +492,4 @@ object HiveDialect extends Dialect {
         }.mkString(",\n  ") +
         "\n)"
   }
-
 }
