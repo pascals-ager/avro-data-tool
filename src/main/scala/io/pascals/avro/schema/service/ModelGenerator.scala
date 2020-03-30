@@ -5,7 +5,7 @@ import io.pascals.avro.schema.metadata._
 import scala.reflect.ClassTag
 import scala.reflect.runtime.universe.TypeTag
 
-trait ModelGeneratorService {
+trait ModelGenerator {
 
   /**
     * Generate data model for provided class

@@ -3,7 +3,7 @@ package io.pascals.avro.schema.service
 import doobie.free.connection.ConnectionIO
 import doobie.util.update.Update0
 import io.pascals.avro.schema.metadata.ClassTypeMeta
-import io.pascals.avro.schema.service.HiveGeneratorServiceImpl.{
+import io.pascals.avro.schema.service.HiveModelGenerator.{
   generateAlterDDL,
   generateCreateDDL
 }
@@ -11,7 +11,7 @@ import io.pascals.avro.schema.service.HiveGeneratorServiceImpl.{
 import scala.reflect.ClassTag
 import scala.reflect.runtime.universe
 
-object HiveExecutorServiceImpl extends QueryExecutorService {
+object HiveQueryExecutor extends QueryExecutor {
 
   /**
     * generates Hive Alter Table statement for provided ClassTypeMeta and returns a side effect free ConnectionIO.

@@ -6,8 +6,8 @@ import doobie.implicits._
 import doobie.util.transactor.{Strategy, Transactor}
 import io.pascals.avro.schema.annotations.hive._
 import io.pascals.avro.schema.metadata._
-import io.pascals.avro.schema.service.HiveExecutorServiceImpl._
-import io.pascals.avro.schema.service.HiveGeneratorServiceImpl.generateCreateDDL
+import io.pascals.avro.schema.service.HiveQueryExecutor._
+import io.pascals.avro.schema.service.HiveModelGenerator.generateCreateDDL
 import io.pascals.avro.schema.tags.IntegrationTest
 import org.scalatest.{FunSuite, Matchers}
 
@@ -15,7 +15,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success, Try}
 
-class HiveExecutorServiceImplTest extends FunSuite with Matchers {
+class HiveQueryExecutorTest extends FunSuite with Matchers {
 
   implicit val cs: ContextShift[IO] = IO.contextShift(ExecutionContext.global)
 

@@ -11,7 +11,7 @@ import io.pascals.avro.schema.metadata.{
 import scala.reflect.ClassTag
 import scala.reflect.runtime.universe.TypeTag
 
-object HiveGeneratorServiceImpl extends ModelGeneratorService {
+object HiveModelGenerator extends ModelGenerator {
 
   private val log = Logger(getClass)
 
@@ -42,7 +42,7 @@ object HiveGeneratorServiceImpl extends ModelGeneratorService {
     * @param c extracted class metadata
     * @tparam T type for which generate data model
     */
-  def generate[T: ClassTag: TypeTag](
+  private def generate[T: ClassTag: TypeTag](
       c: ClassTypeMeta,
       default: Boolean = false
   ): String = {

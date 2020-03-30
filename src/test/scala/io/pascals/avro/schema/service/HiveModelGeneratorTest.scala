@@ -2,7 +2,7 @@ package io.pascals.avro.schema.service
 
 import io.pascals.avro.schema.annotations.hive._
 import io.pascals.avro.schema.metadata._
-import io.pascals.avro.schema.service.HiveGeneratorServiceImpl.{
+import io.pascals.avro.schema.service.HiveModelGenerator.{
   generateAlterDDL,
   generateCreateDDL
 }
@@ -10,7 +10,7 @@ import org.scalatest.{FunSuite, Matchers}
 
 import scala.collection.mutable.ArrayBuffer
 
-class HiveGeneratorServiceImplTest extends FunSuite with Matchers {
+class HiveModelGeneratorTest extends FunSuite with Matchers {
 
   @hiveTable(name = "Person")
   case class Person(

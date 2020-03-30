@@ -6,7 +6,7 @@ import io.pascals.avro.schema.metadata._
 import scala.reflect.ClassTag
 import scala.reflect.runtime.universe.TypeTag
 
-trait QueryExecutorService {
+trait QueryExecutor {
 
   /**
     * Generates Hive Alter Table statement for provided ClassTypeMeta and returns a side effect free ConnectionIO.
