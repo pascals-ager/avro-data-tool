@@ -1,6 +1,7 @@
 package io.pascals.avro.schema.dialects
 
-import io.pascals.avro.schema.metadata._
+import io.pascals.avro.schema.metadata.{ClassFieldMeta, _}
+import it.unimi.dsi.fastutil.ints.IntCollections.IterableCollection
 
 import scala.util.Try
 
@@ -122,6 +123,46 @@ object HiveDialect extends Dialect {
   )
 
   /*
+   * Provide implementations for specific annotations
+   * TODO: Move this to some kind of typeclass pattern
+   * */
+
+  private val HiveTable: String =
+    "io.pascals.avro.schema.annotations.hive.hiveTable"
+  private val HiveExternalTable: String =
+    "io.pascals.avro.schema.annotations.hive.hiveExternalTable"
+  private val Column     = "io.pascals.avro.schema.annotations.hive.column"
+  private val Underscore = "io.pascals.avro.schema.annotations.hive.underscore"
+  private val HivePartitionColumn: String =
+    "io.pascals.avro.schema.annotations.hive.hivePartitionColumn"
+  private val HiveBucketColumn: String =
+    "io.pascals.avro.schema.annotations.hive.hiveBucket"
+  private val HiveStoredAs: String =
+    "io.pascals.avro.schema.annotations.hive.hiveStoredAs"
+  private val HiveTblProps: String =
+    "io.pascals.avro.schema.annotations.hive.hiveTableProperty"
+
+  private val defaultPartitionFields: Seq[ClassFieldMeta] =
+    Seq(
+      ClassFieldMeta("year", "year", IntegerType, List()),
+      ClassFieldMeta("month", "month", IntegerType, List()),
+      ClassFieldMeta("day", "day", IntegerType, List())
+    )
+
+  private val defaultBucketedFields: Seq[(ClassFieldMeta, Int)] = Seq(
+    (ClassFieldMeta("tracking_id", "tracking_id", StringType, List()), 6)
+  )
+
+  private val defaultTblProps: Seq[(String, String)] = Seq(
+    ("orc.compress", "ZLIB"),
+    ("orc.compression.strategy", "SPEED"),
+    ("orc.create.index", "true"),
+    ("orc.encoding.strategy", "SPEED"),
+    ("transactional", "true")
+  )
+
+  private val defaultFormat = "ORC"
+  /*
    * ClassTypeMeta object also implement HasAnnotations. If annotations exist, they must be applied to get the desired
    * type and field names
    * */
@@ -207,26 +248,6 @@ object HiveDialect extends Dialect {
       )
   }
 
-  /*
-   * Provide implementations for specific annotations
-   * TODO: Move this to some kind of typeclass pattern
-   * */
-
-  private val HiveTable: String =
-    "io.pascals.avro.schema.annotations.hive.hiveTable"
-  private val HiveExternalTable: String =
-    "io.pascals.avro.schema.annotations.hive.hiveExternalTable"
-  private val Column     = "io.pascals.avro.schema.annotations.hive.column"
-  private val Underscore = "io.pascals.avro.schema.annotations.hive.underscore"
-  private val HivePartitionColumn: String =
-    "io.pascals.avro.schema.annotations.hive.hivePartitionColumn"
-  private val HiveBucketColumn: String =
-    "io.pascals.avro.schema.annotations.hive.hiveBucket"
-  private val HiveStoredAs: String =
-    "io.pascals.avro.schema.annotations.hive.hiveStoredAs"
-  private val HiveTblProps: String =
-    "io.pascals.avro.schema.annotations.hive.hiveTableProperty"
-
   override def alterDataModel(
       classTypeMeta: ClassTypeMeta,
       fieldsExpressions: Iterable[String]
@@ -236,14 +257,15 @@ object HiveDialect extends Dialect {
 
   override def generateDataModel(
       classTypeMeta: ClassTypeMeta,
-      fieldsExpressions: Iterable[String]
+      fieldsExpressions: Iterable[String],
+      default: Boolean = false
   ): String =
     createTableExpression(classTypeMeta) +
       generateColumnsExpression(classTypeMeta, fieldsExpressions) +
-      generatePartitionExpressions(classTypeMeta) +
-      generateBucketExpressions(classTypeMeta) +
-      generateStoredAsExpression(classTypeMeta) +
-      generateTblPropsExpression(classTypeMeta)
+      generatePartitionExpressions(classTypeMeta, default) +
+      generateBucketExpressions(classTypeMeta, default) +
+      generateStoredAsExpression(classTypeMeta, default) +
+      generateTblPropsExpression(classTypeMeta, default)
 
   override def getAnnotatedClassName(c: ClassTypeMeta): String = {
     val dialectSpecificTableAnnotation = getSpecificAnnotation(HiveTable, c)
@@ -342,11 +364,20 @@ object HiveDialect extends Dialect {
       .map(_._1)
   }
 
-  private def generatePartitionExpressions(c: ClassTypeMeta): String = {
-    val partitionFields = getPartitionFields(c)
-    if (partitionFields.isEmpty)
+  private def generatePartitionExpressions(
+      c: ClassTypeMeta,
+      default: Boolean = false
+  ): String = {
+    val partitionFields: Seq[ClassFieldMeta] = getPartitionFields(c)
+    if (partitionFields.isEmpty && !default)
       ""
-    else {
+    else if (partitionFields.isEmpty && default) {
+      "\nPARTITIONED BY(" +
+        defaultPartitionFields
+          .map(f => s"${f.fieldName} ${generateTypeExpression(f.fieldType)}")
+          .mkString(", ") +
+        ")"
+    } else {
       var fieldOrder = 0
       "\nPARTITIONED BY(" +
         partitionFields
@@ -357,7 +388,8 @@ object HiveDialect extends Dialect {
   }
 
   private def getBucketedFields(
-      c: ClassTypeMeta
+      c: ClassTypeMeta,
+      default: Boolean = false
   ): Seq[(ClassFieldMeta, Int)] = {
     val bucketedFeilds: Iterable[ClassFieldMeta] =
       c.fields.filter(_.annotations.exists(_.name == HiveBucketColumn))
@@ -373,11 +405,25 @@ object HiveDialect extends Dialect {
       .toSeq
   }
 
-  private def generateBucketExpressions(c: ClassTypeMeta): String = {
+  private def generateBucketExpressions(
+      c: ClassTypeMeta,
+      default: Boolean = false
+  ): String = {
     val bucketedFields = getBucketedFields(c)
-    if (bucketedFields.isEmpty)
+    if (bucketedFields.isEmpty && !default)
       ""
-    else {
+    else if (bucketedFields.isEmpty && default) {
+      var numOfBuckets = 0
+      "\nCLUSTERED BY (" +
+        defaultBucketedFields
+          .map(f => {
+            numOfBuckets = numOfBuckets + f._2
+            s"${f._1.fieldName}"
+          })
+          .mkString(", ") +
+        ")" +
+        s"\nINTO $numOfBuckets BUCKETS"
+    } else {
       var numOfBuckets = 0
       "\nCLUSTERED BY (" +
         bucketedFields
@@ -391,20 +437,28 @@ object HiveDialect extends Dialect {
     }
   }
 
-  private def getStoredAsProperty(c: ClassTypeMeta): Option[String] = {
+  private def getStoredAsProperty(
+      c: ClassTypeMeta,
+      default: Boolean = false
+  ): Option[String] = {
     val storedAsProp = getSpecificAnnotation(HiveStoredAs, c)
     storedAsProp.map(a => a.attributes.filter(_.name == "format").head.value)
 
   }
 
-  private def generateStoredAsExpression(c: ClassTypeMeta): String = {
+  private def generateStoredAsExpression(
+      c: ClassTypeMeta,
+      default: Boolean = false
+  ): String = {
     getStoredAsProperty(c) match {
       case Some(format) => s"\nSTORED AS $format"
-      case None         => ""
+      case None =>
+        if (default) s"\nSTORED AS $defaultFormat"
+        else ""
     }
   }
 
-  private def getTblProperties(c: ClassTypeMeta): Iterable[(String, String)] = {
+  private def getTblProperties(c: ClassTypeMeta): Seq[(String, String)] = {
     c.annotations.filter(_.name == HiveTblProps).map { props =>
       {
         (
@@ -413,12 +467,21 @@ object HiveDialect extends Dialect {
         )
       }
     }
-  }
+  }.toSeq
 
-  private def generateTblPropsExpression(c: ClassTypeMeta): String = {
-    val tblProps = getTblProperties(c)
-    if (tblProps.isEmpty) ""
-    else
+  private def generateTblPropsExpression(
+      c: ClassTypeMeta,
+      default: Boolean = false
+  ): String = {
+    val tblProps: Iterable[(String, String)] = getTblProperties(c)
+    if (tblProps.isEmpty && !default) ""
+    else if (tblProps.isEmpty && default) {
+      "\nTBLPROPERTIES(\n  " +
+        defaultTblProps.map { props =>
+          s"'${props._1}' = '${props._2}'"
+        }.mkString(",\n  ") +
+        "\n)"
+    } else
       "\nTBLPROPERTIES(\n  " +
         tblProps.map { props =>
           s"'${props._1}' = '${props._2}'"

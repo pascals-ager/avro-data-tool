@@ -25,7 +25,7 @@ class HiveExecutorServiceImplTest extends FunSuite with Matchers {
   val xa: Transactor[IO] = Transactor.strategy.set(
     Transactor.fromDriverManager[IO](
       "org.apache.hive.jdbc.HiveDriver",
-      "jdbc:hive2://hive-server-two:10000",
+      "jdbc:hive2://localhost:10000",
       "hive",
       "hive"
     ),
@@ -50,7 +50,7 @@ class HiveExecutorServiceImplTest extends FunSuite with Matchers {
 
   test("Create Simple Person Table Test", IntegrationTest) {
     for {
-      ddlConnection <- executeCreateHiveTable[Person]
+      ddlConnection <- executeCreateHiveTable[Person]()
     } yield ddlConnection.transact(xa).unsafeRunSync() shouldEqual 0
   }
 
@@ -75,7 +75,9 @@ class HiveExecutorServiceImplTest extends FunSuite with Matchers {
 
   test("Create test_acquisition_traffic_scoring Table Test", IntegrationTest) {
     for {
-      ddlConnection <- executeCreateHiveTable[test_acquisition_traffic_scoring]
+      ddlConnection <- executeCreateHiveTable[test_acquisition_traffic_scoring](default =
+        true
+      )
     } yield ddlConnection.transact(xa).unsafeRunSync() shouldEqual 0
   }
 

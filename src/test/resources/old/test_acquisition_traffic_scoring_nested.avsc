@@ -1,0 +1,124 @@
+{
+  "type": "record",
+  "name": "test_acquisition_traffic_scoring",
+  "namespace": "io.pascals.avro.schema.model.acquisition",
+  "fields": [
+    {
+      "name": "type",
+      "type": "string"
+    },
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "happened",
+      "type": "string"
+    },
+    {
+      "name": "processed",
+      "type": "string"
+    },
+    {
+      "name": "tracking_id",
+      "type": "string"
+    },
+    {
+      "name": "referenced_event_id",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "source_attributes",
+      "type": {
+        "type": "record",
+        "name": "source_attributes",
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "origin",
+            "type": "string"
+          },
+          {
+            "name": "internal_data",
+            "type": [
+              "null",
+              {
+                "type": "map",
+                "values": [
+                  "null",
+                  "string"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "external_data",
+            "type": [
+              "null",
+              {
+                "type": "map",
+                "values": [
+                  "null",
+                  "string"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "event_data",
+      "type": [
+        "null",
+        {
+          "type": "record",
+          "name": "event_data",
+          "fields": [
+            {
+              "name": "score",
+              "type": "int"
+            },
+            {
+              "name": "decision",
+              "type": "string"
+            },
+            {
+              "name": "reason",
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            {
+              "name": "nested_event_data",
+              "type": [
+                "null",
+                {
+                  "type": "record",
+                  "name": "nested_event_data",
+                  "fields": [
+                    {
+                      "name": "nested_score",
+                      "type": "int"
+                    },
+                    {
+                      "name": "nested_decision",
+                      "type": "string"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

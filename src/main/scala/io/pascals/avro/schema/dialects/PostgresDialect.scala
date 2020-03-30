@@ -76,16 +76,17 @@ object PostgresDialect extends Dialect {
       fieldsExpressions: Iterable[String]
   ): String = ???
 
-  override def generateDataModel(
-      classTypeMeta: metadata.ClassTypeMeta,
-      fieldsExpressions: Iterable[String]
-  ): String = ???
-
   override def alterTableExpression(
       classTypeMetaData: metadata.ClassTypeMeta
   ): String = ???
 
   override def createTableExpression(
       classTypeMetaData: metadata.ClassTypeMeta
+  ): String = ???
+
+  override def generateDataModel(
+      classTypeMeta: metadata.ClassTypeMeta,
+      fieldsExpressions: Iterable[String],
+      default: Boolean
   ): String = ???
 }

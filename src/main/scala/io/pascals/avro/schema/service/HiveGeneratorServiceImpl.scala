@@ -20,8 +20,10 @@ object HiveGeneratorServiceImpl extends ModelGeneratorService {
     *
     * @tparam T type for which to generate data model
     */
-  override def generateCreateDDL[T: ClassTag: TypeTag](): Option[String] =
-    Option(generate(getClassMeta[T]))
+  override def generateCreateDDL[T: ClassTag: TypeTag](
+      default: Boolean = false
+  ): Option[String] =
+    Option(generate(getClassMeta[T], default))
 
   /**
     * Alter data model for provided class metadata
@@ -40,18 +42,24 @@ object HiveGeneratorServiceImpl extends ModelGeneratorService {
     * @param c extracted class metadata
     * @tparam T type for which generate data model
     */
-  def generate[T: ClassTag: TypeTag](c: ClassTypeMeta): String = {
+  def generate[T: ClassTag: TypeTag](
+      c: ClassTypeMeta,
+      default: Boolean = false
+  ): String = {
     val ct = implicitly[ClassTag[T]].runtimeClass
     log.info(s"Generating model for class: [${ct.getName}]")
-    generateDataModel(HiveDialect.applyAnnotation(c))
+    generateDataModel(HiveDialect.applyAnnotation(c), default)
   }
 
   private def alterDataModel(c: ClassTypeMeta): String = {
     HiveDialect.alterDataModel(c, generateFieldsExpressions(c))
   }
 
-  private def generateDataModel(c: ClassTypeMeta): String = {
-    HiveDialect.generateDataModel(c, generateFieldsExpressions(c))
+  private def generateDataModel(
+      c: ClassTypeMeta,
+      default: Boolean = false
+  ): String = {
+    HiveDialect.generateDataModel(c, generateFieldsExpressions(c), default)
   }
 
   private def generateFieldsExpressions(c: ClassTypeMeta): Iterable[String] = {

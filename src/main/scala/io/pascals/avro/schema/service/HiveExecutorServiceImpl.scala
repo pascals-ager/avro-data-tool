@@ -18,25 +18,26 @@ object HiveExecutorServiceImpl extends QueryExecutorService {
     *
     *
     */
-  override val executeAlterHiveTable
-      : ClassTypeMeta => Option[ConnectionIO[Int]] =
-    (classTypeMeta: ClassTypeMeta) =>
-      for {
-        alterDDL <- generateAlterDDL(classTypeMeta)
-      } yield Update0(alterDDL, None).run
+  override def executeAlterHiveTable(
+      cls: ClassTypeMeta
+  ): Option[ConnectionIO[Int]] =
+    for {
+      alterDDL <- generateAlterDDL(cls)
+    } yield Update0(alterDDL, None).run
 
   /**
     * Generates data model for provided type and creates new Hive table.
     * @tparam T type for which to generate data model
     */
-  override def executeCreateHiveTable[T: ClassTag: universe.TypeTag]
-      : Option[ConnectionIO[Int]] =
+  override def executeCreateHiveTable[T: ClassTag: universe.TypeTag](
+      default: Boolean = false
+  ): Option[ConnectionIO[Int]] =
     for {
-      createTableDDL <- generateCreateDDL[T]()
+      createTableDDL <- generateCreateDDL[T](default)
     } yield Update0(createTableDDL, None).run
 
-  override val hiveExecutorService: String => Option[ConnectionIO[Int]] = ddl =>
-    Option(Update0(ddl, None).run)
+  override def hiveExecutorService: String => Option[ConnectionIO[Int]] =
+    ddl => Option(Update0(ddl, None).run)
 
   /*
   val hiveTestExecutorService: String => ConnectionIO[Option[Int]] = ddl => {

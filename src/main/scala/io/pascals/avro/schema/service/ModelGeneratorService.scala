@@ -11,8 +11,12 @@ trait ModelGeneratorService {
     * Generate data model for provided class
     *
     * @tparam T type for which to generate data model
+    *
+    * @param default Generate default table format, buckets and properties
     */
-  def generateCreateDDL[T: ClassTag: TypeTag](): Option[String]
+  def generateCreateDDL[T: ClassTag: TypeTag](
+      default: Boolean = false
+  ): Option[String]
 
   /**
     * Alter data model for provided class metadata

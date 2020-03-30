@@ -11,7 +11,7 @@ class AvroSchemaTransformTest extends FunSuite with Matchers {
   val parserThree = new Parser
   val testSchema: Schema = parserOne.parse(
     this.getClass
-      .getResourceAsStream("/old/test_acquisition_traffic_scoring.avsc")
+      .getResourceAsStream("/old/test_acquisition_traffic_scoring_nested.avsc")
   )
   val flattenedSchema: Schema = parserTwo.parse(
     this.getClass.getResourceAsStream(

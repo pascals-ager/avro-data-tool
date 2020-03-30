@@ -106,7 +106,8 @@ trait Dialect {
 
   def generateDataModel(
       classTypeMeta: ClassTypeMeta,
-      fieldsExpressions: Iterable[String]
+      fieldsExpressions: Iterable[String],
+      default: Boolean = false
   ): String
 
   def alterTableExpression(classTypeMetaData: ClassTypeMeta): String
