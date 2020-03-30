@@ -9,7 +9,7 @@ lazy val Vers = new {
 lazy val commonSettings = Seq(
   name := "avro-data-tool",
   scalaVersion := "2.12.10",
-  organization := "io.pascals.avro.schema",
+  organization := "io.github.pascals.avro.schema",
   scalaVersion := "2.12.10",
   crossScalaVersions := Seq("2.11.11", "2.12.10"),
   scalacOptions ++= Seq("-target:jvm-1.8", "-Ypartial-unification"),
@@ -63,7 +63,7 @@ releaseCommitMessage := s"* Test Setting version to ${(version in ThisBuild).val
 
 val runUnitTests = ReleaseStep(
   action = Command.process(
-    "testOnly * -- -l \"io.pascals.avro.schema.tags.IntegrationTest\"",
+    "testOnly * -- -l \"io.github.pascals.avro.schema.tags.IntegrationTest\"",
     _
   ),
   enableCrossBuild = true
@@ -71,7 +71,7 @@ val runUnitTests = ReleaseStep(
 
 val runIntegrationTests = ReleaseStep(
   action = Command.process(
-    "testOnly * -- -n \"io.pascals.avro.schema.tags.IntegrationTest\"",
+    "testOnly * -- -n \"io.github.pascals.avro.schema.tags.IntegrationTest\"",
     _
   ),
   enableCrossBuild = true
