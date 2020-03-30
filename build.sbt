@@ -7,7 +7,7 @@ lazy val Vers = new {
 }
 
 lazy val commonSettings = Seq(
-  name := "avro-data-tool",
+  name := "avro-ddl-tool",
   scalaVersion := "2.12.10",
   organization := "io.github.pascals.avro.schema",
   scalaVersion := "2.12.10",
@@ -26,7 +26,7 @@ lazy val commonSettings = Seq(
 )
 
 lazy val root = (project in file("."))
-  .settings(moduleName := "avro-data-tool")
+  .settings(moduleName := "avro-ddl-tool")
   .settings(commonSettings: _*)
   .settings(
     libraryDependencies ++= Seq(
@@ -42,16 +42,32 @@ lazy val root = (project in file("."))
       "org.kitesdk"                % "kite-data-core"  % "1.1.0" exclude ("log4j", "log4j") exclude ("sl4j", "sl4j")
     )
   )
+scmInfo := Some(
+  ScmInfo(
+    url("https://github.com/pascals-ager/avro-ddl-tool"),
+    "scm:git@github.com:pascals-ager/avro-ddl-tool.git"
+  )
+)
+
+developers := List(
+  Developer(
+    id    = "io.github.pascals-ager",
+    name  = "pascalsAger",
+    email = "advith.nagappa@gmail.com",
+    url   = url("https://github.com/pascals-ager")
+  )
+)
+
 
 scalafmtOnCompile := true
 publishMavenStyle := true
 publishArtifact in Test := false
 publishTo := {
-  val nexus = ""
+  val nexus = "https://oss.sonatype.org/"
   if (version.value.trim.endsWith("SNAPSHOT"))
-    Some("snapshots" at nexus + "content/repositories/")
+    Some("snapshots" at nexus + "content/repositories/snapshots")
   else
-    Some("releases" at nexus + "content/repositories/")
+    Some("releases" at nexus + "service/local/staging/deploy/maven2")
 }
 pomIncludeRepository := { _ =>
   false
