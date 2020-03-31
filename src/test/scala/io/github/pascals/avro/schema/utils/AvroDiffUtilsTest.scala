@@ -23,7 +23,7 @@ class AvroDiffUtilsTest extends FunSuite with Matchers {
   )
 
   val diffString: String =
-    """{"type":"record","name":"test_acquisition_traffic_scoring","namespace":"io.pascals.avro.schema.model.acquisition","fields":[{"name":"event_data_new_score","type":["null","int"],"default":null},{"name":"event_data_new_array","type":["null",{"type":"array","items":["null","int"]}],"default":null},{"name":"event_data_new_decision","type":["null","string"],"default":null},{"name":"event_data_new_strategies","type":["null",{"type":"array","items":["null",{"type":"record","name":"null","fields":[{"name":"strategy","type":["null","string"]},{"name":"score","type":["null","int"]},{"name":"decision","type":["null","string"]}]}]}],"default":null},{"name":"event_data_new_map_column","type":["null",{"type":"map","values":["null","string"]}],"default":null}]}""".stripMargin
+    """{"type":"record","name":"test_acquisition_traffic_scoring","namespace":"io.github.pascals.avro.schema.model.acquisition","fields":[{"name":"event_data_new_score","type":["null","int"],"default":null},{"name":"event_data_new_array","type":["null",{"type":"array","items":["null","int"]}],"default":null},{"name":"event_data_new_decision","type":["null","string"],"default":null},{"name":"event_data_new_strategies","type":["null",{"type":"array","items":["null",{"type":"record","name":"null","fields":[{"name":"strategy","type":["null","string"]},{"name":"score","type":["null","int"]},{"name":"decision","type":["null","string"]}]}]}],"default":null},{"name":"event_data_new_map_column","type":["null",{"type":"map","values":["null","string"]}],"default":null}]}""".stripMargin
 
   val diffSchema: Schema = parserThree.parse(diffString)
   val diff: Option[Schema] =

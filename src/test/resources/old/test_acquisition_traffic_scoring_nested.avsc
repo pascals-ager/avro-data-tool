@@ -1,7 +1,7 @@
 {
   "type": "record",
   "name": "test_acquisition_traffic_scoring",
-  "namespace": "io.pascals.avro.schema.model.acquisition",
+  "namespace": "io.github.pascals.avro.schema.model.acquisition",
   "fields": [
     {
       "name": "type",
