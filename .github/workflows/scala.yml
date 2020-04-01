@@ -17,13 +17,26 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Publish Artifact
+    - name: Recv Key
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
-      run: |
-        gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys ${env:GPG_PUBLIC_KEY}
-        gpg --list-keys
-        gpg --list-secret-keys
+      run: gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys ${env:GPG_PUBLIC_KEY}
+
+    - name: List Key
+      env:
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
+      run: gpg --list-keys
+
+    - name: List Secret
+      env:
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
+      run: gpg --list-secret-keys
