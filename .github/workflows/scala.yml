@@ -17,6 +17,15 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+
+    - name: Gen Key
+      env:
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
+      run: gpg --gen-key
+
     - name: Recv Key
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
