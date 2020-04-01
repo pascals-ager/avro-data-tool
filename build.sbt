@@ -69,7 +69,7 @@ credentials += Credentials("Sonatype Nexus Repository Manager",
   System.getenv("SONATYPE_USERNAME"),
   System.getenv("SONATYPE_PASSWORD"))
 
-usePgpKeyHex("CDD163BC350FBC4831BD02F205CBCC855CB03C11")
+usePgpKeyHex(System.getenv("GPG_PUBLIC_KEY"))
 
 scalafmtOnCompile := true
 publishMavenStyle := true

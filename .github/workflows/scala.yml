@@ -23,9 +23,10 @@ jobs:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-    - name: Publish signed artifact to local staging
-      run: gpg --version; gpg --list-keys
+    - name: Receive gpg keys
+      run: gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys $GPG_PUBLIC_KEY
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        GPG_PUBLIC_KEY: ${{ secrets.SONATYPE_PASSWORD }}
