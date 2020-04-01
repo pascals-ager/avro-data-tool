@@ -28,6 +28,7 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file("."))
   .settings(moduleName := "avro-ddl-tool")
   .settings(commonSettings: _*)
+  .settings(pgpPassphrase := Some(System.getenv("GPG_PASSPHRASE").toCharArray))
   .settings(
     libraryDependencies ++= Seq(
       "org.scala-lang"             % "scala-reflect"   % scalaVersion.value,
@@ -63,6 +64,12 @@ developers := List(
   )
 )
 
+credentials += Credentials("Sonatype Nexus Repository Manager",
+  "oss.sonatype.org",
+  System.getenv("SONATYPE_USERNAME"),
+  System.getenv("SONATYPE_PASSWORD"))
+
+usePgpKeyHex("CDD163BC350FBC4831BD02F205CBCC855CB03C11")
 
 scalafmtOnCompile := true
 publishMavenStyle := true
