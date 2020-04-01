@@ -25,4 +25,6 @@ jobs:
         GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
       run: |
         gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys ${env:GPG_PUBLIC_KEY}
+        gpg --list-keys
+        gpg --list-secret-keys
         sbt ";testOnly * -- -l \"io.github.pascals.avro.schema.tags.IntegrationTest\"; publishSigned"
