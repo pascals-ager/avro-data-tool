@@ -18,7 +18,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Receive gpg keys
-      run: gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys CDD163BC350FBC4831BD02F205CBCC855CB03C11
+      run: gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys "$GPG_PUBLIC_KEY"
       env:
         GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
