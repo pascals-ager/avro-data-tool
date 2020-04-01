@@ -183,10 +183,21 @@ class HiveModelGeneratorTest extends FunSuite with Matchers {
                             |   event_data_device STRUCT<device_manufacturer : STRING, device_name : STRING, form_factor : STRING, os : STRING, os_version : STRING, is_tablet : BOOLEAN, is_wireless_device : BOOLEAN, mobile_browser : STRING, mobile_browser_version : STRING>,
                             |   event_data_geolocation STRUCT<latitude : STRING, longitude : STRING, precision_radius : INT, continent : STRING, country_code : STRING, region : STRING, city : STRING, city_localized : STRING, zipcode : STRING, timezone : STRING>,
                             |   event_data_isp STRUCT<network : STRING, name : STRING, organization : STRING, autonomous_system_number : STRING>
+                            |)
+                            |PARTITIONED BY(year INT, month INT, day INT)
+                            |CLUSTERED BY (tracking_id)
+                            |INTO 6 BUCKETS
+                            |STORED AS ORC
+                            |TBLPROPERTIES(
+                            |  'orc.compress' = 'ZLIB',
+                            |  'orc.compression.strategy' = 'SPEED',
+                            |  'orc.create.index' = 'true',
+                            |  'orc.encoding.strategy' = 'SPEED',
+                            |  'transactional' = 'true'
                             |)""".stripMargin
 
-  test("Generate Clicks Table Test") {
-    val testClick: String = generateCreateDDL[test_click]().get
+  test("Generate Clicks Table Test with default properties") {
+    val testClick: String = generateCreateDDL[test_click](default = true).get
     testClick should equal(testClickDDL)
   }
 
@@ -229,7 +240,7 @@ class HiveModelGeneratorTest extends FunSuite with Matchers {
                               |  'avro.schema.url' = 'hdfs:///metadata/table.avro'
                               |)""".stripMargin
 
-  test("Generate TBLPROPERTIES Test") {
+  test("Generate Tblproperties Test") {
 
     val propertyTable: String = generateCreateDDL[PropertyTest]().get
     propertyTable should equal(propertyDDL)
