@@ -23,4 +23,4 @@ jobs:
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
-      run: gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys CDD163BC350FBC4831BD02F205CBCC855CB03C11
+      run: gpg --keyserver hkp://pool.sks-keyservers.net --recv-keys $GPG_PUBLIC_KEY
