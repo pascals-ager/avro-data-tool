@@ -30,4 +30,4 @@ jobs:
         SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
-      run: sbt "testOnly * -- -l \"io.github.pascals.avro.schema.tags.IntegrationTest\"; publishSigned"
+      run: sbt ";testOnly * -- -l \"io.github.pascals.avro.schema.tags.IntegrationTest\"; publishSigned"
