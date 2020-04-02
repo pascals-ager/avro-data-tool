@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
 
     steps:
@@ -49,3 +49,11 @@ jobs:
         SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
         GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
       run: gpg --list-secret-keys
+
+    - name: SBT Publish and Release to Sonatype
+      env:
+        GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
+      run: sbt ";clean;compile;testOnly * -- -l \"io.github.pascals.avro.schema.tags.IntegrationTest\";publishSigned;sonatypeBundleRelase"
